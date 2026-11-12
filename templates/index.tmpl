@@ -173,7 +173,7 @@
                     "Press the <b>space bar</b> when you are ready to start.</p>"
             }
 
-            instructions.push(block_0)
+            timeline.push(block_0)
 
             const block_00 = {
                 type: jsPsychHtmlKeyboardResponse,
@@ -271,6 +271,42 @@
 
             instructions.push(block_7)
             let time;
+
+            const test_0 = {
+                type: jsPsychIatHtml,
+                stim_key_association: jsPsych.timelineVariable('association'),
+                html_when_wrong: '<span style="color: red; font-size: 80px">X</span>',
+                bottom_instructions: '<p>If you press the wrong key, a red X will appear. Press the correct key to continue</p>',
+                stimulus: jsPsych.timelineVariable('stimulus'),
+                stimulus_duration: 1000,
+                force_correct_key_press: true,
+                display_feedback: true,
+                trial_duration: 3000,
+                left_category_key: 'd',
+                right_category_key: 'k',
+                left_category_label: category_displays[0][0],
+                right_category_label: category_displays[0][1],
+                response_ends_trial: true,
+                data:{
+                    trial:jsPsych.timelineVariable('trial'),
+                    block:jsPsych.timelineVariable('block'),
+                    trial_type_airtable:jsPsych.timelineVariable('trial_type'),
+                    stimulus_type:jsPsych.timelineVariable('stimulus_type'),
+                    item:jsPsych.timelineVariable('item'),
+                    category:jsPsych.timelineVariable('category'),
+                    category_display:jsPsych.timelineVariable('category_display'),
+                    stimulus:jsPsych.timelineVariable('stimulus'),
+                    correct_key:jsPsych.timelineVariable('correct_key'),
+                    order:jsPsych.timelineVariable('order'),
+                },
+                on_start: function(test_1){
+                    time = Date.now()
+                },
+                on_finish: function(data){
+                    data['rt_correct_response'] = Date.now() - time
+                    time = 0
+                }
+            };
 
             const test_1 = {
                 type: jsPsychIatHtml,
@@ -380,8 +416,152 @@
                 }
             };
 
+            const test_4 = {
+                type: jsPsychIatHtml,
+                stim_key_association: jsPsych.timelineVariable('association'),
+                html_when_wrong: '<span style="color: red; font-size: 80px">X</span>',
+                bottom_instructions: '<p>If you press the wrong key, a red X will appear. Press the correct key to continue</p>',
+                stimulus: jsPsych.timelineVariable('stimulus'),
+                stimulus_duration: 1000,
+                force_correct_key_press: true,
+                display_feedback: true,
+                trial_duration: 3000, //Only if display_feedback is false
+                left_category_key: 'd',
+                right_category_key: 'k',
+                left_category_label: category_displays[4][0],
+                right_category_label: category_displays[4][1],
+                response_ends_trial: true,
+                data:{
+                    trial:jsPsych.timelineVariable('trial'),
+                    block:jsPsych.timelineVariable('block'),
+                    trial_type_airtable:jsPsych.timelineVariable('trial_type'),
+                    stimulus_type:jsPsych.timelineVariable('stimulus_type'),
+                    item:jsPsych.timelineVariable('item'),
+                    category:jsPsych.timelineVariable('category'),
+                    category_display:jsPsych.timelineVariable('category_display'),
+                    stimulus:jsPsych.timelineVariable('stimulus'),
+                    correct_key:jsPsych.timelineVariable('correct_key'),
+                    order:jsPsych.timelineVariable('order')
+                },
+                on_start: function(test_3){
+                    time = Date.now()
+                },
+                on_finish: function(data){
+                    data['rt_correct_response'] = Date.now() - time
+                    time = 0
+                }
+            };
 
-            const tests = [test_1, test_2, test_3]
+            const test_5 = {
+                type: jsPsychIatHtml,
+                stim_key_association: jsPsych.timelineVariable('association'),
+                html_when_wrong: '<span style="color: red; font-size: 80px">X</span>',
+                bottom_instructions: '<p>If you press the wrong key, a red X will appear. Press the correct key to continue</p>',
+                stimulus: jsPsych.timelineVariable('stimulus'),
+                stimulus_duration: 1000,
+                force_correct_key_press: true,
+                display_feedback: true,
+                trial_duration: 3000, //Only if display_feedback is false
+                left_category_key: 'd',
+                right_category_key: 'k',
+                left_category_label: category_displays[5][0],
+                right_category_label: category_displays[5][1],
+                response_ends_trial: true,
+                data:{
+                    trial:jsPsych.timelineVariable('trial'),
+                    block:jsPsych.timelineVariable('block'),
+                    trial_type_airtable:jsPsych.timelineVariable('trial_type'),
+                    stimulus_type:jsPsych.timelineVariable('stimulus_type'),
+                    item:jsPsych.timelineVariable('item'),
+                    category:jsPsych.timelineVariable('category'),
+                    category_display:jsPsych.timelineVariable('category_display'),
+                    stimulus:jsPsych.timelineVariable('stimulus'),
+                    correct_key:jsPsych.timelineVariable('correct_key'),
+                    order:jsPsych.timelineVariable('order')
+                },
+                on_start: function(test_3){
+                    time = Date.now()
+                },
+                on_finish: function(data){
+                    data['rt_correct_response'] = Date.now() - time
+                    time = 0
+                }
+            };
+            
+
+            const test_6 = {
+                type: jsPsychIatHtml,
+                stim_key_association: jsPsych.timelineVariable('association'),
+                html_when_wrong: '<span style="color: red; font-size: 80px">X</span>',
+                bottom_instructions: '<p>If you press the wrong key, a red X will appear. Press the correct key to continue</p>',
+                stimulus: jsPsych.timelineVariable('stimulus'),
+                stimulus_duration: 1000,
+                force_correct_key_press: true,
+                display_feedback: true,
+                trial_duration: 3000, //Only if display_feedback is false
+                left_category_key: 'd',
+                right_category_key: 'k',
+                left_category_label: category_displays[6][0],
+                right_category_label: category_displays[6][1],
+                response_ends_trial: true,
+                data:{
+                    trial:jsPsych.timelineVariable('trial'),
+                    block:jsPsych.timelineVariable('block'),
+                    trial_type_airtable:jsPsych.timelineVariable('trial_type'),
+                    stimulus_type:jsPsych.timelineVariable('stimulus_type'),
+                    item:jsPsych.timelineVariable('item'),
+                    category:jsPsych.timelineVariable('category'),
+                    category_display:jsPsych.timelineVariable('category_display'),
+                    stimulus:jsPsych.timelineVariable('stimulus'),
+                    correct_key:jsPsych.timelineVariable('correct_key'),
+                    order:jsPsych.timelineVariable('order')
+                },
+                on_start: function(test_3){
+                    time = Date.now()
+                },
+                on_finish: function(data){
+                    data['rt_correct_response'] = Date.now() - time
+                    time = 0
+                }
+            };
+
+            const test_7 = {
+                type: jsPsychIatHtml,
+                stim_key_association: jsPsych.timelineVariable('association'),
+                html_when_wrong: '<span style="color: red; font-size: 80px">X</span>',
+                bottom_instructions: '<p>If you press the wrong key, a red X will appear. Press the correct key to continue</p>',
+                stimulus: jsPsych.timelineVariable('stimulus'),
+                stimulus_duration: 1000,
+                force_correct_key_press: true,
+                display_feedback: true,
+                trial_duration: 3000, //Only if display_feedback is false
+                left_category_key: 'd',
+                right_category_key: 'k',
+                left_category_label: category_displays[7][0],
+                right_category_label: category_displays[7][1],
+                response_ends_trial: true,
+                data:{
+                    trial:jsPsych.timelineVariable('trial'),
+                    block:jsPsych.timelineVariable('block'),
+                    trial_type_airtable:jsPsych.timelineVariable('trial_type'),
+                    stimulus_type:jsPsych.timelineVariable('stimulus_type'),
+                    item:jsPsych.timelineVariable('item'),
+                    category:jsPsych.timelineVariable('category'),
+                    category_display:jsPsych.timelineVariable('category_display'),
+                    stimulus:jsPsych.timelineVariable('stimulus'),
+                    correct_key:jsPsych.timelineVariable('correct_key'),
+                    order:jsPsych.timelineVariable('order')
+                },
+                on_start: function(test_3){
+                    time = Date.now()
+                },
+                on_finish: function(data){
+                    data['rt_correct_response'] = Date.now() - time
+                    time = 0
+                }
+            };
+                        
+            const tests = [test_0, test_1, test_2, test_3, test_4, test_5, test_6, test_7]
 
             for (let i = 0; i < test_stimuli.length; i++) {
                 timeline.push(instructions[i]);
