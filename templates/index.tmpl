@@ -25,6 +25,23 @@
         const apiBase = "{{ .ServerHost }}";
         //console.warn = () => {};
 
+        function getParamFromURL(name) {
+            name = name.replace(/\[/, "\\[").replace(/]/, "\\]");
+            let regex = new RegExp("[?&]" + name + "=([^&#]*)");
+            let results = regex.exec(window.location.href);
+            try{
+                let decoded = decodeURIComponent(results[1])
+                return results ? decoded : "";
+            }
+            catch(error){
+                return ""
+            }
+        }
+
+        let worker_id = getParamFromURL('PROLIFIC_PID');
+        let study_id = getParamFromURL('STUDY_ID') || "NULL";
+        let session_id = getParamFromURL('SESSION_ID') || "NULL";
+
         async function preload_images(data){
             let preloadedImages = []
             data.forEach(img=>{
@@ -91,6 +108,96 @@
             }
         }
 
+        async function askForProlificID() {
+            document.body.innerHTML = `
+                <style>
+                    body {
+                        font-family: Roboto, sans-serif;
+                        background: white;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        height: 100vh;
+                        margin: 0;
+                    }
+
+                    .card {
+                        width: 100%;
+                        max-width: 650px;
+                        padding: 40px;
+                        box-sizing: border-box;
+                    }
+
+                    h2 {
+                        margin-top: 0;
+                    }
+
+                    label {
+                        display: block;
+                        font-size: .8rem;
+                        font-weight: 600;
+                        text-transform: uppercase;
+                        letter-spacing: .05em;
+                        color: #3d6b4f;
+                        margin-bottom: 8px;
+                    }
+
+                    input {
+                        width: 100%;
+                        padding: 12px;
+                        font-size: 16px;
+                        box-sizing: border-box;
+                    }
+
+                    .hint {
+                        color: #777;
+                        font-size: .85rem;
+                        margin-top: 8px;
+                    }
+
+                    button {
+                        margin-top: 30px;
+                        padding: 12px 28px;
+                        font-size: 16px;
+                        cursor: pointer;
+                    }
+                </style>
+
+                <div class="card">
+                    <h2>Prolific ID</h2>
+
+                    <input
+                        id="pid"
+                        value="${worker_id}"
+                        placeholder="Enter your Prolific PID"
+                    >
+
+                    <div class="hint">
+                        This should already be filled in if you opened the study from Prolific.
+                    </div>
+
+                    <button id="continue">
+                        Continue
+                    </button>
+                </div>
+            `;
+
+            document.getElementById("continue").onclick = async () => {
+                const pid = document.getElementById("pid").value.trim();
+
+                if (!pid) {
+                    alert("Please enter your Prolific PID.");
+                    return;
+                }
+
+                worker_id = pid;
+
+                document.body.innerHTML = "";
+
+                await fetchData();
+            };
+        }
+
         function initializeJsPsych(){
             const jsPsych = initJsPsych();
 
@@ -107,13 +214,7 @@
                 }
             }
 
-            let subject_id = crypto.randomUUID();
-            let worker_id = getParamFromURL('PROLIFIC_PID') || subject_id;
-            let study_id = getParamFromURL('STUDY_ID') || "NULL";
-            let session_id = getParamFromURL('SESSION_ID') || "NULL";
-
             jsPsych.data.addProperties({
-                subject: subject_id,
                 worker_id: worker_id,
                 study_id: study_id,
                 session_id: session_id
@@ -238,7 +339,8 @@
             const block_5 = {
                 type: jsPsychHtmlKeyboardResponse,
                 choices: [" "],
-                stimulus: `<p>Use the D key for ${category_displays[5][0][1] ? `<b>` + category_displays[5][0][1] + `</b> and for <b>${category_displays[5][0][0]}. </b> ` : `<b>` + category_displays[5][0][0] + `</b>`} <br/><br/>` +
+                stimulus: `<p><b>Watch out, the labels have changed position!</b> <br/><br/>` + 
+                    `<p>Use the D key for ${category_displays[5][0][1] ? `<b>` + category_displays[5][0][1] + `</b> and for <b>${category_displays[5][0][0]}. </b> ` : `<b>` + category_displays[5][0][0] + `</b>`} <br/><br/>` +
                     `Use the K key for ${category_displays[5][1][1] ? `<b>` + category_displays[5][1][1] + `</b> and for <b>${category_displays[5][1][0]}</b>. ` : `<b>` + category_displays[5][1][0] + `</b>`}<br/><br/>` +
                     "Each item belongs to only one category. <br/><br/>" +
                     "If you make a mistake, a red X will appear. Press the correct key to continue. Go as fast as you can while being accurate. <br/><br/><br/><br/>" +
@@ -835,11 +937,11 @@
 
             const end_block = {
                 type: jsPsychHtmlKeyboardResponse,
-                stimulus: '<p>Thanks for participating! You will be now redirected to Qualtrics within 10s.</p>',
+                stimulus: '<p>Thanks for participating! You will be now redirected to Prolific within 10s.</p>',
                 choices:'NO_KEYS',
                 on_start: function (data) {
                     setTimeout(()=>{
-                        window.location = `https://rit.az1.qualtrics.com/jfe/form/SV_9sP4Kqk3ywNFqaa?PROLIFIC_PID=${worker_id}&STUDY_ID=${study_id}&SESSION_ID=${session_id}`
+                        window.location = `https://app.prolific.com/submissions/complete?cc=CLL8IJGA?PROLIFIC_PID=${worker_id}&STUDY_ID=${study_id}&SESSION_ID=${session_id}`
                     }, 10000)
                 }
             }
@@ -873,7 +975,7 @@
         }
 
         window.onload = function() {
-            fetchData();
+            askForProlificID()
         }
 
     </script>
